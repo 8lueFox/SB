@@ -1,7 +1,29 @@
-﻿@{ 
+﻿@model IEnumerable<University>
+@{ 
     ViewBag.Title = "ScienceBook - Home";
 }
 
 <div class="card">
     HEELLO
+</div>
+
+<div>
+    Count: @Model.Count()
+    <ul>
+        @foreach (var item in Model)
+        {
+        <li>
+            @item.Name
+            @if (item.Departments != null)
+            {
+                <ol>
+                    @foreach (var item2 in item.Departments)
+                    {
+                        <li>@item2.Name</li>
+                    }
+                </ol>
+            }
+        </li>
+        }
+    </ul>
 </div>

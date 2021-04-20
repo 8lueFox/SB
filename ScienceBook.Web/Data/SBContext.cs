@@ -11,11 +11,8 @@ namespace ScienceBook.Web.Data
 {
     public class SBContext : DbContext
     {
-        private readonly IConfiguration config;
-
-        public SBContext(IConfiguration config)
+        public SBContext(DbContextOptions<SBContext> options) : base(options)
         {
-            this.config = config;
         }
 
         public DbSet<CategoryOfScienceClub> CategoriesOfScienceClub { get; set; }
@@ -37,11 +34,9 @@ namespace ScienceBook.Web.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Vote> Votes { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnConfiguring(optionsBuilder);
-
-            optionsBuilder.UseSqlServer(config["ConnectionStrings:SBContextDb"]);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
