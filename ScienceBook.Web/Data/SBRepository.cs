@@ -1,4 +1,6 @@
-﻿using ScienceBook.Web.Data.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using ScienceBook.Web.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +17,7 @@ namespace ScienceBook.Web.Data
             this.ctx = ctx;
         }
 
-        #region University's functions
+        #region Model University
 
         public University GetUniversity(int id)
         {
@@ -34,18 +36,26 @@ namespace ScienceBook.Web.Data
 
         public IEnumerable<University> GetUniversitiesWithDepartments()
         {
-            var temp = ctx.Universities
-                          .Join(ctx.Departments, u => u.Id, d => d.Id, (u, d) => new { Universities = u, Departments = d })
-                          .Select(ud => new University
-                          {
-                              Name = ud.Universities.Name,
-                              Departments = ud.Universities.Departments
-                          })
-                          .ToList();
-
-            return temp;
+            return ctx.Universities
+                      .Include(u => u.Departments)
+                      .ThenInclude(d => d.ScienceBooks)
+                      .ToList();
         }
 
-    #endregion
+        #endregion
+
+        #region Model TaskState
+
+        public IEnumerable<TaskState> GetTaskStates()
+        {
+            return ctx.TaskStates.OrderBy(ts => ts.Name).ToList();
+        }
+
+        public TaskState GetTaskState(int id)
+        {
+            return ctx.TaskStates.Find(id);
+        }
+
+        #endregion
     }
 }

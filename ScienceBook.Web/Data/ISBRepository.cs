@@ -9,5 +9,8 @@ namespace ScienceBook.Web.Data
         IEnumerable<University> GetUniversitiesWithDepartments();
         University GetUniversity(int id);
         University GetUniversity(string name);
+
+        IEnumerable<TaskState> GetTaskStates();
+        TaskState GetTaskState(int id);
     }
 }

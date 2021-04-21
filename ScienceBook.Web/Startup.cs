@@ -35,7 +35,8 @@ namespace ScienceBook.Web
             services.AddScoped<ISBRepository, SBRepository>();
 
             services.AddControllersWithViews()
-                .AddRazorRuntimeCompilation();
+                .AddRazorRuntimeCompilation()
+                .AddNewtonsoftJson(cfg => cfg.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddRazorPages();
         }

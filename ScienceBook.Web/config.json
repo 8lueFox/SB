@@ -1,5 +1,11 @@
 ﻿{
   "ConnectionStrings": {
     "SBContextDb": "Data Source=DESKTOP-FGR09RS\\SQL19;Initial Catalog=sb_database;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
+  },
+  "Logging": {
+    "LogLevel": {
+      "ScienceBook.Web": "Information",
+      "Microsoft": "Warning"
+    }
   }
 }
