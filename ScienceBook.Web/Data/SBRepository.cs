@@ -17,6 +17,16 @@ namespace ScienceBook.Web.Data
             this.ctx = ctx;
         }
 
+        public void SaveAll()
+        {
+            ctx.SaveChanges();
+        }
+
+        public void AddEntity(object model)
+        {
+            ctx.Add(model);
+        }
+
         #region Model University
 
         public University GetUniversity(int id)

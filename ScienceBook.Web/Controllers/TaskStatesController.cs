@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ScienceBook.Web.Data;
 using ScienceBook.Web.Data.Entities;
+using ScienceBook.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +18,15 @@ namespace ScienceBook.Web.Controllers
     {
         private readonly ISBRepository repository;
         private readonly ILogger<TaskStatesController> logger;
+        private readonly IMapper mapper;
 
-        public TaskStatesController(ISBRepository repository, ILogger<TaskStatesController> logger)
+        public TaskStatesController(ISBRepository repository,
+            ILogger<TaskStatesController> logger,
+            IMapper mapper)
         {
             this.repository = repository;
             this.logger = logger;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -28,7 +34,8 @@ namespace ScienceBook.Web.Controllers
         {
             try
             {
-                return Ok(repository.GetTaskStates());
+                var result = repository.GetTaskStates();
+                return Ok(mapper.Map<IEnumerable<TaskStateViewModel>>(result));
             }
             catch(Exception ex)
             {
@@ -45,7 +52,7 @@ namespace ScienceBook.Web.Controllers
                 var taskState = repository.GetTaskState(id);
 
                 if (taskState != null)
-                    return Ok(taskState);
+                    return Ok(mapper.Map<TaskStateViewModel>(taskState));
                 else
                     return NotFound();
             }
@@ -54,6 +61,32 @@ namespace ScienceBook.Web.Controllers
                 logger.LogError($"Failed to get task states: {ex}");
                 return BadRequest("Failed to get task states");
             }
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody]TaskStateViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var taskstate = mapper.Map<TaskState>(model);
+
+                    repository.AddEntity(taskstate);
+                    repository.SaveAll();
+
+                    return Created($"/api/taskstates/{taskstate.Id}", mapper.Map<TaskStateViewModel>(taskstate));
+                }
+                else
+                {
+                    return BadRequest(model);
+                }
+            }catch(Exception ex) 
+            {
+                logger.LogError($"Failed to save a new taskstate: {ex}");
+            }
+
+            return BadRequest("Failed to save a new taskstate");
         }
     }
 }

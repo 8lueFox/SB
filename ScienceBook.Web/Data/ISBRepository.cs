@@ -5,6 +5,9 @@ namespace ScienceBook.Web.Data
 {
     public interface ISBRepository
     {
+        void SaveAll();
+        void AddEntity(object model);
+
         IEnumerable<University> GetUniversities();
         IEnumerable<University> GetUniversitiesWithDepartments();
         University GetUniversity(int id);

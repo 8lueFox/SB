@@ -9,6 +9,7 @@ using ScienceBook.Web.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ScienceBook.Web
@@ -31,6 +32,8 @@ namespace ScienceBook.Web
             });
 
             services.AddTransient<SBSeeder>();
+
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             services.AddScoped<ISBRepository, SBRepository>();
 
